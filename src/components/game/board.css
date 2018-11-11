@@ -1,0 +1,24 @@
+.main-board {
+  margin: auto;
+}
+
+.row-box {
+  text-align: center;
+}
+
+.play-box {
+  border-spacing: border-box;
+  border: 1px solid black;
+  background: lightblue;
+  width: 60px;
+  height: 80px;
+  display: inline-block;
+}
+
+.empty-box {
+  opacity: 0;
+  width: 60px;
+  height: 80px;
+  display: inline-block;
+}
+
