@@ -9,9 +9,9 @@ class ButtonCatalog extends Component {
     const { attemptedCharacters } = this.props.state
 
     const buttonStyle = {
-      width: '2.1em',
-      height: '2.1em',
-      fontSize: '2.35em',
+      width: '2em',
+      height: '2em',
+      fontSize: '2.15em',
       fontWeight: 'bold',
       margin: '0.2em',
       padding: '0',

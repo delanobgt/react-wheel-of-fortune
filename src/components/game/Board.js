@@ -3,37 +3,106 @@ import './board.css'
 import _ from 'lodash'
 import React, { Component, Fragment } from 'react'
 
+const array = (n) => [...Array(n)].map(e => null)
+
 class GameIndex extends Component {
-  
-  createRow = (size) => [...Array(size).keys()].map(e => <div key={_.uniqueId()} className="play-box"></div>)
+
+  createEmptyButton = () => (
+    <button
+      key={_.uniqueId()}
+      className="button is-white empty-box"
+    ></button>
+  )
+  createRow = (cols) => cols.map(e => 
+    <button
+      key={_.uniqueId()}
+      className="button is-warning play-box"
+    >{e || ' '}</button>
+  )
+
+  tryWordsPlacing = (answer, rowWidths) => {
+    const tokens = _.split(answer, / +/)
+    const resultRows = []
+
+    let width = _.head(rowWidths), row = []
+    rowWidths = _.tail(rowWidths)
+    let tokenIndex = 0
+    while (tokenIndex < tokens.length) {
+      const token = tokens[tokenIndex]
+      if (row.length === 0 && token.length <= width) {
+        row.push(token)
+        width -= token.length
+        tokenIndex += 1
+      } else if (row.length >= 1 && token.length + 1 <= width) {
+        row.push(token)
+        width -= (token.length + 1)
+        tokenIndex += 1
+      } else {
+        resultRows.push(row)
+        row = []
+        if (rowWidths.length === 0) return null
+        width = _.head(rowWidths)
+        rowWidths = _.tail(rowWidths)
+      }
+    }
+    if (row.length > 0) resultRows.push(row)
+    return resultRows
+  }
+
+  centerWords = (words, width) => {
+    if (!words) return array(width)
+    const joinedWord = _.join(words, ' ')
+    console.log(joinedWord)
+    const leftStart = Math.floor((width - joinedWord.length) / 2)
+    return [...array(leftStart), ...joinedWord.split(''), ...array(width-leftStart-joinedWord.length)]
+  }
 
   render() {
     const { userAnswer, currentQuestion: { category, answer } } = this.props.state
     console.log({ category, answer })
 
+    const rowsPlacing = this.tryWordsPlacing(userAnswer, [14, 14]) || this.tryWordsPlacing(userAnswer, [12, 14, 14, 12])
+
+    const rows = []
+    if (rowsPlacing.length <= 2) {
+      rows.push(
+        this.centerWords(null, 12), 
+        this.centerWords(rowsPlacing[0], 14),
+        this.centerWords(rowsPlacing[1], 14),
+        this.centerWords(null, 12)
+      )
+    } else {
+      rows.push(
+        this.centerWords(rowsPlacing[0], 12),
+        this.centerWords(rowsPlacing[1], 14),
+        this.centerWords(rowsPlacing[2], 14),
+        this.centerWords(rowsPlacing[3], 12)
+      )
+    }
+
+    console.log(rows)
+
     return (
       <Fragment>
-        <p>{userAnswer}</p>
-
         <div className="main-board">
           <div className="row-box">
-            <div className="empty-box"></div>
-            {this.createRow(12)}
-            <div className="empty-box"></div>
+            {this.createEmptyButton()}
+            {this.createRow(rows[0])}
+            {this.createEmptyButton()}
           </div>
 
           <div className="row-box">
-            {this.createRow(14)}
+          {this.createRow(rows[1])}
           </div>
 
           <div className="row-box">
-            {this.createRow(14)}
+          {this.createRow(rows[2])}
           </div>
 
           <div className="row-box">
-            <div className="empty-box"></div>
-            {this.createRow(12)}
-            <div className="empty-box"></div>        
+            {this.createEmptyButton()}
+            {this.createRow(rows[3])}
+            {this.createEmptyButton()}
           </div>
         </div>
       </Fragment>

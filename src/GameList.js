@@ -48,7 +48,7 @@ const QuestionList = [
     },
     {
       category: "COMPANY",
-      answer: "PT. TELEKOMUNIKASI SELULAR",
+      answer: "PT TELEKOMUNIKASI SELULAR",
     },
     {
       category: "SONG TITLE",
