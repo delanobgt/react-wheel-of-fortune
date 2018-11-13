@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css'
 import '../../App.css'
 import _ from 'lodash'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import Board from './Board'
 import GuessCharacterDialog from './GuessCharacterDialog'
 import GuessPhraseDialog from './GuessPhraseDialog'
@@ -9,6 +9,7 @@ import WinDialog from './WinDialog'
 import LoseDialog from './LoseDialog'
 import ButtonCatalog from './ButtonCatalog'
 import RoundChangeDialog from './RoundChangeDialog'
+import SpinTheWheelDialog from './SpinTheWheelDialog'
 import GameList from '../../GameList'
 
 class GameIndex extends Component {
@@ -27,6 +28,9 @@ class GameIndex extends Component {
       userAnswer,
       attemptedCharacters: [],
 
+      scoreMultiplier: null,
+      wheelTrigger: undefined,
+
       gameList,
       gameListIndex: 0,
       currentGame,
@@ -39,7 +43,12 @@ class GameIndex extends Component {
       wonScore: false,
       loseDialogOpen: false,
       roundChangeDialogOpen: false,
+      spinTheWheelDialogOpen: false,
     }
+  }
+
+  setScoreMultiplier = (value) => {
+    this.setState({ scoreMultiplier: value })
   }
 
   nextGame = () => {
@@ -96,6 +105,14 @@ class GameIndex extends Component {
     })
   }
 
+  toggleWheelTrigger = status => {
+    this.setState({ wheelTrigger: status })
+  }
+
+  toggleSpinTheWheelDialogOpen = open => {
+    this.setState({ spinTheWheelDialogOpen: open })
+  }
+
   toggleGuessPhraseDialog = open => {
     this.setState({ guessPhraseDialogOpen: open })
   }
@@ -105,7 +122,7 @@ class GameIndex extends Component {
   }
 
   guessCharacter = (character) => {
-    const { attemptedCharacters, userAnswer, currentQuestion: { answer } } = this.state
+    const { attemptedCharacters, userAnswer, currentQuestion: { answer }, spinTheWheelDialogOpen, wheelTrigger } = this.state
     this.setState({ attemptedCharacters: [...attemptedCharacters, character] })
     if (answer.includes(character)) {
       const newUserAnswer = _.chain(answer)
@@ -162,25 +179,46 @@ class GameIndex extends Component {
 
   render() {
     const {
+      currentRound,
       currentQuestion: { category },
       guessCharacterDialogOpen,
       guessPhraseDialogOpen,
       wonScore,
       loseDialogOpen,
       roundChangeDialogOpen,
+      spinTheWheelDialogOpen,
+      wheelTrigger,
     } = this.state
 
     return (
-      <Fragment>
+      <div>
+        <br/>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ display: 'inline-block', color: 'white', background: 'green', fontSize: '1.75em', fontWeight: 'bold', padding: '0 0.35em' }}>
+            ROUND {currentRound + 1}
+          </p>
+        </div>
         <Board state={this.state} />
         <div style={{ textAlign: 'center' }}>
-          <p style={{ border: '2px solid green', display: 'inline-block', padding: '0.35em 1.2em' }}>
+          <p style={{ background: 'white', display: 'inline-block', padding: '0.05em 1.2em', fontWeight: 'bold', fontSize: '1.5em', width: '720px', marginBottom: '0.5em' }}>
             {category}
           </p>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <button className="button is-primary" onClick={() => {}}>Spin the Wheel</button>
-          <button className="button is-primary" onClick={() => this.toggleGuessPhraseDialog(true)}>Guess the Phrase</button>
+          <button 
+            className="button is-danger" 
+            onClick={() => {}}
+            style={{ fontWeight: 'bold', fontSize: '1.25em' }}
+          >
+            Spin the Wheel
+          </button>
+          <button 
+            className="button is-warning" 
+            onClick={() => this.toggleGuessPhraseDialog(true)}
+            style={{ fontWeight: 'bold', fontSize: '1.25em' }}
+          >
+            Guess the Phrase
+          </button>
         </div>
         <ButtonCatalog
           state={this.state}
@@ -212,7 +250,11 @@ class GameIndex extends Component {
         <LoseDialog
           open={loseDialogOpen}
         />
-      </Fragment>
+        <SpinTheWheelDialog
+          open={spinTheWheelDialogOpen}
+          wheelTrigger={wheelTrigger}
+        />
+      </div>
     )
   }
 }

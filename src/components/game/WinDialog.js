@@ -9,7 +9,7 @@ class WinDialog extends Component {
     return (
       <Fragment>
         <div className={`modal ${wonScore ? 'is-active' : ''}`}>
-          <div className="modal-background" style={{ background: 'rgba(0,0,0,0.35)' }}></div>
+          <div className="modal-background" style={{ background: 'rgba(0,0,0,0.05)' }}></div>
           <div className="modal-content" style={{ maxWidth: '350px' }}>
             <div 
               className="card" style={{ background: 'lightgreen', borderRadius: '15px' }}>

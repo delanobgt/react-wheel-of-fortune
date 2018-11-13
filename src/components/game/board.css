@@ -6,19 +6,37 @@
   text-align: center;
 }
 
-.play-box {
-  /* border-spacing: border-box; */
+.play-box-empty {
+  /* background-color: green !important; */
+  background-image: url(../../res/uph-logo-light.png) !important;
+  background-size: contain;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  color: white !important;
+  border: 3px solid green !important;
+  border-radius: 3px !important;
   width: 60px;
-  height: 80px;
+  height: 75px;
   font-weight: bold;
-  font-size: 2em;  
-  margin: 0.05em;
+  font-size: 2.1em;
+  border-radius: 0;
+}
+
+.play-box-content {
+  background-color: white !important;
+  color: black !important;
+  border: 3px solid green !important;
+  border-radius: 3px !important;
+  width: 60px;
+  height: 75px;
+  font-weight: bold;
+  font-size: 2.1em;
   border-radius: 0;
 }
 
 .empty-box {
   opacity: 0;
   width: 60px;
-  height: 80px;
+  height: 75px;
 }
 

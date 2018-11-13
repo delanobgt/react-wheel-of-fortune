@@ -11,14 +11,14 @@ class ButtonCatalog extends Component {
     const buttonStyle = {
       width: '2em',
       height: '2em',
-      fontSize: '2.15em',
+      fontSize: '2em',
       fontWeight: 'bold',
       margin: '0.2em',
       padding: '0',
     }
 
     return (
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', background: 'rgba(0,0,0,0.55)' }}>
         <div>
           { 
             _.chain([...Array(13).keys()])

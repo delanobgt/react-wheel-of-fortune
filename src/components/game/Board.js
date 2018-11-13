@@ -14,10 +14,23 @@ class GameIndex extends Component {
     ></button>
   )
   createRow = (cols) => cols.map(e => 
-    <button
-      key={_.uniqueId()}
-      className="button is-warning play-box"
-    >{e || ' '}</button>
+    e === '*' ? ( 
+      <button
+        key={_.uniqueId()}
+        className="button is-success play-box-content"
+      >{' '}</button> 
+    ) : 'A'.charCodeAt() <= (e || '').charCodeAt() && (e || '').charCodeAt() <= 'Z'.charCodeAt() ? (
+      <button
+        key={_.uniqueId()}
+        className="button is-success play-box-content"
+      >{e}</button> 
+    ) : (
+      <button
+        key={_.uniqueId()}
+        className="button is-success play-box-empty"
+      >{' '}</button> 
+    )
+
   )
 
   tryWordsPlacing = (answer, rowWidths) => {
@@ -52,7 +65,6 @@ class GameIndex extends Component {
   centerWords = (words, width) => {
     if (!words) return array(width)
     const joinedWord = _.join(words, ' ')
-    console.log(joinedWord)
     const leftStart = Math.floor((width - joinedWord.length) / 2)
     return [...array(leftStart), ...joinedWord.split(''), ...array(width-leftStart-joinedWord.length)]
   }
@@ -79,8 +91,6 @@ class GameIndex extends Component {
         this.centerWords(rowsPlacing[3], 12)
       )
     }
-
-    console.log(rows)
 
     return (
       <Fragment>
