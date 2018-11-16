@@ -29,7 +29,7 @@ class GameIndex extends Component {
       attemptedCharacters: [],
 
       scoreMultiplier: null,
-      wheelTrigger: undefined,
+      wheelTrigger: false,
 
       gameList,
       gameListIndex: 0,
@@ -122,7 +122,7 @@ class GameIndex extends Component {
   }
 
   guessCharacter = (character) => {
-    const { attemptedCharacters, userAnswer, currentQuestion: { answer }, spinTheWheelDialogOpen, wheelTrigger } = this.state
+    const { attemptedCharacters, userAnswer, currentQuestion: { answer }, scoreMultiplier } = this.state
     this.setState({ attemptedCharacters: [...attemptedCharacters, character] })
     if (answer.includes(character)) {
       const newUserAnswer = _.chain(answer)
@@ -133,7 +133,7 @@ class GameIndex extends Component {
         .join('')
         .value()
       this.setState({ userAnswer: newUserAnswer })
-      const wonScore = _.countBy(answer)[character]
+      const wonScore = _.countBy(answer)[character] * scoreMultiplier
       this.toastWinDialog(wonScore)
       if (newUserAnswer === answer) {
         setTimeout(() => this.toggleRoundChangeDialog(true), 2500)
@@ -144,10 +144,10 @@ class GameIndex extends Component {
   }
 
   guessPhrase = (phrase) => {
-    const { userAnswer, currentQuestion: { answer } } = this.state
+    const { userAnswer, currentQuestion: { answer }, scoreMultiplier } = this.state
     if (answer === phrase) {
       this.setState({ userAnswer: phrase })
-      const wonScore = _.countBy(userAnswer)['*']
+      const wonScore = _.countBy(userAnswer)['*'] * scoreMultiplier
       this.toastWinDialog(wonScore)
       setTimeout(() => this.toggleRoundChangeDialog(true), 2500)
     } else {
@@ -163,7 +163,7 @@ class GameIndex extends Component {
     setTimeout(() => {
       this.setState({ wonScore: score })
       setTimeout(() => {
-        this.setState({ wonScore: 0 })
+        this.setState({ wonScore: 0, scoreMultiplier: null })
       }, 2000)
     }, 250)
   }
@@ -188,6 +188,7 @@ class GameIndex extends Component {
       roundChangeDialogOpen,
       spinTheWheelDialogOpen,
       wheelTrigger,
+      scoreMultiplier,
     } = this.state
 
     return (
@@ -204,22 +205,28 @@ class GameIndex extends Component {
             {category}
           </p>
         </div>
+        <br/>
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
           <button 
-            className="button is-danger" 
-            onClick={() => {}}
+            className={`button ${scoreMultiplier ? 'is-success' : 'is-danger'}`} 
+            onClick={ scoreMultiplier ? () => {} : () => {
+              this.toggleSpinTheWheelDialogOpen(true)
+              this.setScoreMultiplier(null)
+            }}
             style={{ fontWeight: 'bold', fontSize: '1.25em' }}
           >
-            Spin the Wheel
+            { scoreMultiplier ? `${scoreMultiplier} X Multiplier` : 'Spin the Wheel' }
           </button>
           <button 
             className="button is-warning" 
             onClick={() => this.toggleGuessPhraseDialog(true)}
             style={{ fontWeight: 'bold', fontSize: '1.25em' }}
+            disabled={!Boolean(scoreMultiplier)}
           >
             Guess the Phrase
           </button>
         </div>
+        <br/>
         <ButtonCatalog
           state={this.state}
           guessCharacter={this.guessCharacter}
@@ -251,8 +258,12 @@ class GameIndex extends Component {
           open={loseDialogOpen}
         />
         <SpinTheWheelDialog
+          state={this.state}
           open={spinTheWheelDialogOpen}
           wheelTrigger={wheelTrigger}
+          toggleSpinTheWheelDialogOpen={this.toggleSpinTheWheelDialogOpen}
+          toggleWheelTrigger={this.toggleWheelTrigger}
+          setScoreMultiplier={this.setScoreMultiplier}
         />
       </div>
     )

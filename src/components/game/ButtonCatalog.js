@@ -6,7 +6,7 @@ class ButtonCatalog extends Component {
 
   render() {
     const { guessCharacter } = this.props
-    const { attemptedCharacters } = this.props.state
+    const { attemptedCharacters, scoreMultiplier } = this.props.state
 
     const buttonStyle = {
       width: '2em',
@@ -27,7 +27,7 @@ class ButtonCatalog extends Component {
                 return (
                   <button
                     key={currentChar}
-                    disabled={attemptedCharacters.includes(currentChar)}
+                    disabled={!Boolean(scoreMultiplier) || attemptedCharacters.includes(currentChar)}
                     onClick={() => guessCharacter(currentChar)}
                     className="button is-info"
                     style={buttonStyle}
@@ -47,7 +47,7 @@ class ButtonCatalog extends Component {
                 return (
                   <button
                     key={currentChar}
-                    disabled={attemptedCharacters.includes(currentChar)}
+                    disabled={!Boolean(scoreMultiplier) || attemptedCharacters.includes(currentChar)}
                     onClick={() => guessCharacter(currentChar)}
                     className="button is-info"
                     style={buttonStyle}
