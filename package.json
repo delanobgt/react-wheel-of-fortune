@@ -9,7 +9,8 @@
     "react-dom": "^16.6.0",
     "react-icons": "^3.2.2",
     "react-p5-wrapper": "0.0.4",
-    "react-scripts": "2.1.1"
+    "react-scripts": "2.1.1",
+    "react-sound": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

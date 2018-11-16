@@ -11,6 +11,7 @@ import ButtonCatalog from './ButtonCatalog'
 import RoundChangeDialog from './RoundChangeDialog'
 import SpinTheWheelDialog from './SpinTheWheelDialog'
 import GameList from '../../GameList'
+import Sound from 'react-sound'
 
 class GameIndex extends Component {
 
@@ -44,6 +45,9 @@ class GameIndex extends Component {
       loseDialogOpen: false,
       roundChangeDialogOpen: false,
       spinTheWheelDialogOpen: false,
+
+      playWinSound: false,
+      playLoseSound: false,
     }
   }
 
@@ -161,18 +165,18 @@ class GameIndex extends Component {
 
   toastWinDialog = (score) => {
     setTimeout(() => {
-      this.setState({ wonScore: score })
+      this.setState({ wonScore: score, playWinSound: true })
       setTimeout(() => {
-        this.setState({ wonScore: 0, scoreMultiplier: null })
+        this.setState({ wonScore: 0, playWinSound: false, scoreMultiplier: null })
       }, 2000)
     }, 250)
   }
   
   toastLoseDialog = () => {
     setTimeout(() => {
-      this.setState({ loseDialogOpen: true })
+      this.setState({ loseDialogOpen: true, playLoseSound: true })
       setTimeout(() => {
-        this.setState({ loseDialogOpen: false })
+        this.setState({ loseDialogOpen: false, playLoseSound: false })
       }, 2000)
     }, 250)
   }
@@ -189,10 +193,30 @@ class GameIndex extends Component {
       spinTheWheelDialogOpen,
       wheelTrigger,
       scoreMultiplier,
+
+      playWinSound,
+      playLoseSound,
     } = this.state
 
     return (
       <div>
+        { playWinSound ? (
+            <Sound
+              url="win.mp3"
+              playStatus={Sound.status.PLAYING}
+              onFinishedPlaying={this.handleSongFinishedPlaying}
+            />
+          ) : null 
+        }
+        { playLoseSound ? (
+            <Sound
+              url="lose.mp3"
+              playStatus={Sound.status.PLAYING}
+              onFinishedPlaying={this.handleSongFinishedPlaying}
+            />
+          ) : null 
+        }
+
         <br/>
         <div style={{ textAlign: 'center' }}>
           <p style={{ display: 'inline-block', color: 'white', background: 'green', fontSize: '1.75em', fontWeight: 'bold', padding: '0 0.35em' }}>
